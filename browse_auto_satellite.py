@@ -170,7 +170,7 @@ for file_name in list_file_name:
         target_file= dl_dir+"\\"+file_name
         target_size = os.path.getsize(target_file)
         print(target_size)
-        if target_size <10000:
+        if target_size <10000000:
             shutil.move(target_file,data_dir)
             time.sleep(3)
 #.crdownloadが含まれるfileは無視して移動
