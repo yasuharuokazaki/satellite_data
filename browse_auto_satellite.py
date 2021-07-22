@@ -121,8 +121,8 @@ print("waited tr")
 #リストの行数取得
 t_rows_num=len(chrome.find_elements_by_xpath("//*[@id='list']/tbody/tr"))
 
-if t_rows_num>5:
-    t_rows_num = 5
+if t_rows_num>6:
+    t_rows_num = 6
 
 print(t_rows_num)
 
@@ -170,8 +170,9 @@ for file_name in list_file_name:
         target_file= dl_dir+"\\"+file_name
         target_size = os.path.getsize(target_file)
         print(target_size)
-        shutil.move(target_file,data_dir)
-        time.sleep(3)
+        if target_size <10000:
+            shutil.move(target_file,data_dir)
+            time.sleep(3)
 #.crdownloadが含まれるfileは無視して移動
 
 # shutil.move(dl_file,move_to)
