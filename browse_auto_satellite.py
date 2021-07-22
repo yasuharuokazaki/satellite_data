@@ -121,21 +121,21 @@ print("waited tr")
 #リストの行数取得
 t_rows_num=len(chrome.find_elements_by_xpath("//*[@id='list']/tbody/tr"))
 
-if t_rows_num>8:
-    t_rows_num = 8
+if t_rows_num>5:
+    t_rows_num = 5
 
 print(t_rows_num)
 
 #GCOM-Cのデータだけ選択
-for num in range(1,t_rows_num+1):
+for num in range(1,t_rows_num):
     inner_text=chrome.find_element_by_xpath(f"/html/body/div[5]/div[4]/div[2]/div[1]/div[2]/div[3]/div[3]/div/table/tbody/tr[{num}]/td[4]").get_attribute("title")
     if "GCOM-C" in inner_text:
         dl_button=wait.until(EC.element_to_be_clickable((By.XPATH,f"/html/body/div[5]/div[4]/div[2]/div[1]/div[2]/div[3]/div[3]/div/table/tbody/tr[{num}]/td[8]/button[1]")))
         dl_button.click()
-        time.sleep(3)
+        time.sleep(10)
         print(inner_text)
 
-print("DL done!")
+print("now downloading!")
 
 #DLしたファイルを指定フォルダに格納
 import os
@@ -152,12 +152,28 @@ if dir_date not in os.listdir(current_dir):
     os.mkdir(current_dir+"\\"+dir_date)
     print("made dir!")
 
+#wait for DL
+print("now waiting...")
+time.sleep(15)
+print("restart")
+
+
 #fileの移動DLー＞検索日のファイル
 import shutil
 dl_dir=r"C:\Users\rockf\Downloads"
 print(dl_dir)
 list_file_name=os.listdir(dl_dir)
 print(list_file_name)
+
+for file_name in list_file_name:
+    if ".crdownload" or ".ini" not in os.path.splitext(file_name):
+        target_file= dl_dir+"\\"+file_name
+        target_size = os.path.getsize(target_file)
+        print(target_size)
+        shutil.move(target_file,data_dir)
+        time.sleep(3)
+#.crdownloadが含まれるfileは無視して移動
+
 # shutil.move(dl_file,move_to)
 
 #1行目のtd[4]がGCOM-Cを含んでいたら、ダウンロードボタンクリック
