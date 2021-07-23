@@ -141,16 +141,21 @@ print("now downloading!")
 import os
 
 current_dir = os.getcwd()
+satellite_tmp_dir = r"C:\Users\rockf\AppData\Local\Temp\satellite_data"
 dir_date = START.replace('/','')
-data_dir = current_dir+"\\"+dir_date
+
 
 print(current_dir)
 print(dir_date)
-print(data_dir)
+print(satellite_tmp_dir)
 
-if dir_date not in os.listdir(current_dir):
-    os.mkdir(current_dir+"\\"+dir_date)
+if dir_date not in os.listdir(satellite_tmp_dir):
+    data_dir=os.mkdir(satellite_tmp_dir+"\\"+dir_date)
     print("made dir!")
+else:
+    data_dir = satellite_tmp_dir+"\\"+dir_date
+
+print(data_dir)
 
 #wait for DL
 print("now waiting...")
@@ -161,20 +166,28 @@ print("restart")
 #fileの移動DLー＞検索日のファイル
 import shutil
 dl_dir=r"C:\Users\rockf\Downloads"
-print(dl_dir)
+print("dl_dir :"+dl_dir)
 list_file_name=os.listdir(dl_dir)
 print(list_file_name)
 
 for file_name in list_file_name:
+    
     if ".crdownload" or ".ini" not in os.path.splitext(file_name):
-        target_file= dl_dir+"\\"+file_name
+        target_file= dl_dir+"\\"+file_name 
         target_size = os.path.getsize(target_file)
         print(target_size)
         if target_size <10000000:
             shutil.move(target_file,data_dir)
             time.sleep(3)
-        else:
-            os.remove(target_file)
+
+#DLフォルダにファイルがあったら削除する 
+       
+if os.listdir(dl_dir)!="":
+    print("file is here!")
+    del_list = os.listdir(dl_dir)
+    for del_file_name in del_list:
+        del_target=dl_dir+"\\"+del_file_name
+        os.remove(del_target)
 #.crdownloadが含まれるfileは無視して移動
 
 # shutil.move(dl_file,move_to)
@@ -204,4 +217,4 @@ for file_name in list_file_name:
 # click = ActionChains(chrome).move_to_element(close_button).click()
 # click.perform()
 
-# chrome.close()
+chrome.close()
