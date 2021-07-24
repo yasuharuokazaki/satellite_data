@@ -6,8 +6,33 @@ from selenium.webdriver.common.action_chains import ActionChains
 # from bs4 import BeautifulSoup
 import time
 import datetime
+import sys
 # import pyautogui
 # import webbrowser
+
+#DLしたファイルを指定フォルダに格納
+import os
+target_date = datetime.datetime.now()-datetime.timedelta(days=1)
+START=target_date.strftime("%Y/%m/%d")
+current_dir = os.getcwd()
+satellite_tmp_dir = r"C:\Users\rockf\AppData\Local\Temp\satellite_data"
+dir_date = START.replace('/','')
+
+
+print("Current directory is "+current_dir)
+print("Ahead directory name is "+dir_date)
+print(satellite_tmp_dir)
+
+if dir_date not in os.listdir(satellite_tmp_dir):
+    os.mkdir(satellite_tmp_dir+"\\"+dir_date)
+    data_dir_name=satellite_tmp_dir+"\\"+dir_date
+    print("made "+data_dir_name)
+else:
+    data_dir_name = satellite_tmp_dir+"\\"+dir_date
+
+print(data_dir_name)
+
+
 
 chrome = webdriver.Chrome("./driver/chromedriver.exe")
 
@@ -116,7 +141,7 @@ click.perform()
 
 #プロダクトリスト表示まち
 wait.until(EC.visibility_of_element_located((By.XPATH,'//*[@id="list"]/tbody')))
-print("waited tr")
+print("data list was showen")
 
 #リストの行数取得
 t_rows_num=len(chrome.find_elements_by_xpath("//*[@id='list']/tbody/tr"))
@@ -124,7 +149,7 @@ t_rows_num=len(chrome.find_elements_by_xpath("//*[@id='list']/tbody/tr"))
 if t_rows_num>6:
     t_rows_num = 6
 
-print(t_rows_num)
+print("Data List has "+str(t_rows_num)+"datas")
 
 #GCOM-Cのデータだけ選択
 for num in range(1,t_rows_num):
@@ -135,28 +160,12 @@ for num in range(1,t_rows_num):
         time.sleep(10)
         print(inner_text)
 
-print("now downloading!")
-
-#DLしたファイルを指定フォルダに格納
-import os
-
-current_dir = os.getcwd()
-satellite_tmp_dir = r"C:\Users\rockf\AppData\Local\Temp\satellite_data"
-dir_date = START.replace('/','')
+print("Now loading...")
 
 
-print(current_dir)
-print(dir_date)
-print(satellite_tmp_dir)
 
-if dir_date not in os.listdir(satellite_tmp_dir):
-    data_dir=os.mkdir(satellite_tmp_dir+"\\"+dir_date)
-    print("made dir!")
-else:
-    data_dir = satellite_tmp_dir+"\\"+dir_date
-
-print(data_dir)
-
+print("Download files are moved into "+str(data_dir_name))
+time.sleep(2)
 #wait for DL
 print("now waiting...")
 time.sleep(15)
@@ -173,11 +182,13 @@ print(list_file_name)
 for file_name in list_file_name:
     
     if ".crdownload" or ".ini" not in os.path.splitext(file_name):
+        print(file_name)
         target_file= dl_dir+"\\"+file_name 
         target_size = os.path.getsize(target_file)
         print(target_size)
         if target_size <10000000:
-            shutil.move(target_file,data_dir)
+            shutil.move(target_file,data_dir_name)
+            print("moved!"+data_dir_name)
             time.sleep(3)
 
 #DLフォルダにファイルがあったら削除する 
