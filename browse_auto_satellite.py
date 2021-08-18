@@ -41,8 +41,8 @@ chrome.get("https://gportal.jaxa.jp/gpr/search?tab=1")
 wait = WebDriverWait(chrome, 10)
 
 
-LOGIN_ID = "yasuharu"
-PASSWORD = "Fishing@l0g1"
+LOGIN_ID = ""
+PASSWORD = ""
 
 def login_to_jaxa():
     #login dialog open
